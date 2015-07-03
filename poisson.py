@@ -49,7 +49,4 @@ def Geigerer(l,t):
                 print "BEEP! after "+str(result[i]/10.0)+" seconds."
         print "BEEEEEEEEP"
 
-#Geigerer(4,100)
-
-for i in range(10):
-        print poisson0(4)
+Geigerer(4,100)
