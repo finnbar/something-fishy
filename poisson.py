@@ -6,29 +6,37 @@ r = random.random
 
 # FOR ANOTHER TIME: GET THE CUMULATIVE TABLE BEFORE
 
-def poisson0(l): # by Finnbar!
-        C = math.exp(-l) # our constant term
+def poisson0(l,Cumu=[],debug=False): # by Finnbar!
+        Number = r()
+        k = 0
+        if Cumu == []:
+                Cumu = poissonCumulative(l,debug)
+        while True:
+                if Number < Cumu[k]:
+                        return k
+                k += 1
+
+def poissonCumulative(l,debug):
         # Generate a cumulative frequency thingy
         Cumu = [0]
         k = 0
-        Number = r()
         previous = 0
         while True:
-                k += 1
-                new = Cumu[-1] + (((l**k)*C)/math.factorial(k))
-                if new == previous: # if stupidly small
+                nextProb = getPoisson(l,k)
+                new = Cumu[-1] + nextProb
+                if new == previous: # if stupidly small difference
                         Cumu.append(1)
                         break
                 else:
                         Cumu.append(new)
                         previous = new
-        k = 0
-        while True:
                 k += 1
-                if Number < Cumu[k]:
-                        return k
+        k = 0
+        Cumu = Cumu[1:]
+        if debug: print Cumu
+        return Cumu
 
-def poisson1(l): # by that Knuth bloke
+def poisson1(l,Cumu=[],debug=False): # by that Knuth bloke
         L = math.exp(-l)
         k = 0 # Number of chances when a particle has been emitted
         p = 1 # Is it greater than e^-l?
@@ -39,14 +47,30 @@ def poisson1(l): # by that Knuth bloke
                         return k - 1
 
 YOUR_FAVOURITE_POISSON_ALGORITHM = poisson0
+THESE_VARIABLE_NAMES_ARE_FROM_A_COMP1_PAPER = True
 
-def Geigerer(l,t):
-        result = [0] * t
+def resultsSet(l,t):
+        r = []
+        c = poissonCumulative(l,False)
         for i in range(t):
-                result[i] = YOUR_FAVOURITE_POISSON_ALGORITHM(l)
-        for i in range(t):
-                time.sleep(result[i]/10.0)
-                print "BEEP! after "+str(result[i]/10.0)+" seconds."
-        print "BEEEEEEEEP"
+              r.append(YOUR_FAVOURITE_POISSON_ALGORITHM(l,c))
+        return r
 
-Geigerer(4,100)
+def findMean(tab):
+        tot = 0
+        div = 0
+        for i in tab:
+                tot += i
+                div += 1.0
+        return tot/div
+
+def findVariance(tab):
+        div = 0
+        tot2 = 0
+        for i in tab:
+                tot2 += i**2
+                div += 1
+        return (tot2-(div*(findMean(tab)**2)))/div
+
+def getPoisson(l,k):
+    return math.exp(-l) * ((l**k)/math.factorial(k)) 
