@@ -4,8 +4,6 @@ r = random.random
 
 # ( L^k / k! ) * e^-L
 
-# FOR ANOTHER TIME: GET THE CUMULATIVE TABLE BEFORE
-
 def newRandomSeed():
         # thanks random.com
         random.seed(urllib2.Request("https://www.random.org/integers/?num=1&min=0&max=1000000000&col=1&base=10&format=plain&rnd=new"))
@@ -50,6 +48,15 @@ def poisson1(l,Cumu=[],debug=False): # by that Knuth bloke
                 if p <= L:
                         return k - 1
 
+def poisson2(l,t): # thanks to http://preshing.com/20111007/how-to-generate-random-timings-for-a-poisson-process/
+        Time = 0
+        Timings = []
+        while Time < t:
+                Time += -math.log(1.0 - r()) / l
+                if Time < t: # may have become > t since the while check
+                        Timings.append(Time)
+        return Timings
+
 YOUR_FAVOURITE_POISSON_ALGORITHM = poisson0
 THESE_VARIABLE_NAMES_ARE_FROM_A_COMP1_PAPER = True
 
@@ -64,6 +71,7 @@ def experimentalProbability(tab,n):
         return tab.count(n)/float(len(tab))
 
 def goodnessOfFit(l,t,n):
+        # Chi-squared test!
         tab = resultsSet(l, t)
         x2 = 0
         for i in range(n):
