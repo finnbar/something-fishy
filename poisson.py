@@ -1,10 +1,14 @@
-import math, random, time
+import math, random, time, urllib2
 
 r = random.random
 
 # ( L^k / k! ) * e^-L
 
 # FOR ANOTHER TIME: GET THE CUMULATIVE TABLE BEFORE
+
+def newRandomSeed():
+        # thanks random.com
+        random.seed(urllib2.Request("https://www.random.org/integers/?num=1&min=0&max=1000000000&col=1&base=10&format=plain&rnd=new"))
 
 def poisson0(l,Cumu=[],debug=False): # by Finnbar!
         Number = r()
@@ -55,6 +59,20 @@ def resultsSet(l,t):
         for i in range(t):
               r.append(YOUR_FAVOURITE_POISSON_ALGORITHM(l,c))
         return r
+
+def experimentalProbability(tab,n):
+        return tab.count(n)/float(len(tab))
+
+def goodnessOfFit(l,t,n):
+        tab = resultsSet(l, t)
+        x2 = 0
+        for i in range(n):
+                oi = float(experimentalProbability(tab,i))
+                ei = float(getPoisson(l,i))
+                if ei == 0:
+                        break
+                x2 += ((oi-ei)**2)/ei
+        return x2
 
 def findMean(tab):
         tot = 0
