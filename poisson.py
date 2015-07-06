@@ -67,6 +67,12 @@ def resultsSet(l,t):
               r.append(YOUR_FAVOURITE_POISSON_ALGORITHM(l,c))
         return r
 
+def resultsSet2(l,t):
+        r = []
+        for i in range(t):
+                r.append(len(poisson2(l,1)))
+        return r
+
 def experimentalProbability(tab,n):
         return tab.count(n)/float(len(tab))
 
