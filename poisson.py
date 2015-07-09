@@ -57,9 +57,6 @@ def poisson2(l,t): # thanks to http://preshing.com/20111007/how-to-generate-rand
                         Timings.append(Time)
         return Timings
 
-YOUR_FAVOURITE_POISSON_ALGORITHM = poisson0
-THESE_VARIABLE_NAMES_ARE_FROM_A_COMP1_PAPER = True
-
 def resultsSet(l,t):
         r = []
         c = poissonCumulative(l,False)
@@ -73,12 +70,16 @@ def resultsSet2(l,t):
                 r.append(len(poisson2(l,1)))
         return r
 
+YOUR_FAVOURITE_POISSON_ALGORITHM = poisson0
+YOUR_FAVOUTITE_RESULTS_SET = resultsSet2
+THESE_VARIABLE_NAMES_ARE_FROM_A_COMP1_PAPER = True
+
 def experimentalProbability(tab,n):
         return tab.count(n)/float(len(tab))
 
 def goodnessOfFit(l,t,n):
         # Chi-squared test!
-        tab = resultsSet(l, t)
+        tab = YOUR_FAVOURITE_RESULTS_SET(l, t)
         x2 = 0
         for i in range(n):
                 oi = float(experimentalProbability(tab,i))
