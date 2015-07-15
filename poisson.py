@@ -4,15 +4,28 @@ r = random.random
 
 # ( L^k / k! ) * e^-L
 
+'''
+What does this do?
+> It grabs a truly random seed from random.com
+> It return Poisson-distributed random numbers
+> It returns proper Poisson-distributed intervals
+> These results have a mean and variance of roughly LAMBDA
+> It has a very low score on the goodness of fit test (chi-squared)
+> It will find cake for you*
+
+* only on April 31st
+
+'''
+
 def newRandomSeed():
-        # thanks random.com
+        # thanks random.org
         random.seed(urllib2.Request("https://www.random.org/integers/?num=1&min=0&max=1000000000&col=1&base=10&format=plain&rnd=new"))
 
 def poisson0(l,Cumu=[],debug=False): # by Finnbar!
-        Number = r()
-        k = 0
         if Cumu == []:
                 Cumu = poissonCumulative(l,debug)
+        Number = r() # r = random.random
+        k = 0
         while True:
                 if Number < Cumu[k]:
                         return k
@@ -71,8 +84,17 @@ def resultsSet2(l,t):
         return r
 
 YOUR_FAVOURITE_POISSON_ALGORITHM = poisson0
-YOUR_FAVOUTITE_RESULTS_SET = resultsSet2
+YOUR_FAVOURITE_RESULTS_SET = resultsSet2
 THESE_VARIABLE_NAMES_ARE_FROM_A_COMP1_PAPER = True
+
+def Geigerer(LAMBDA,tim):
+        T = 0
+        while T < tim:
+                i = -math.log(1.0-r())/LAMBDA
+                T += i
+                print "BEEP after "+str(i)+" seconds."
+                time.sleep(i)
+        print "BEEEEEEEP"
 
 def experimentalProbability(tab,n):
         return tab.count(n)/float(len(tab))
@@ -107,3 +129,8 @@ def findVariance(tab):
 
 def getPoisson(l,k):
     return math.exp(-l) * ((l**k)/math.factorial(k)) 
+
+def ask(): # this is not useful. In fact, it will probably form the base
+           # for an elaborate joke in the presentation, or something.
+        raw_input("What is your question? ")
+        return "Yes"
